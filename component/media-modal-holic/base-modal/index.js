@@ -8,8 +8,7 @@ export default class MediaModal extends HTMLElement {
   }
 
   async connectedCallback() {
-    console.log('Styles Loaded');
-
+    console.log('BaseModal connected', this.shadowRoot);
     await this._loadTemplate();
     this._updateContent();
   }
@@ -31,17 +30,19 @@ export default class MediaModal extends HTMLElement {
   _updateContent() {
     const type = this.getAttribute('type');
     const src = this.getAttribute('src');
-    const container = this.shadowRoot.querySelector('.media-container');
-
+    const container = this.shadowRoot.querySelector('.modal');
+    const thumb = this.shadowRoot.querySelector('.thumb');
+    console.log("_update", type, src, container);
+    if (!type || !src || !container) return;
     switch (type) {
       case 'video':
-        container.innerHTML = `<video src="${src}" ${this.showControls ? 'controls' : ''}></video>`;
+        thumb.innerHTML = container.innerHTML = `<video src="${src}" ${this.showControls ? 'controls' : ''} muted></video>`;
         break;
       case 'audio':
-        container.innerHTML = `<audio src="${src}" ${this.showControls ? 'controls' : ''}></audio>`;
+        thumb.innerHTML = container.innerHTML = `<audio src="${src}" ${this.showControls ? 'controls' : ''}></audio>`;
         break;
       case 'image':
-        container.innerHTML = `<img src="${src}">`;
+        thumb.innerHTML = container.innerHTML = `<img src="${src}">`;
         break;
     }
   }
