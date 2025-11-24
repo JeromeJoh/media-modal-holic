@@ -8,9 +8,11 @@ export default class MediaModal extends HTMLElement {
   }
 
   async connectedCallback() {
-    console.log('BaseModal connected', this.shadowRoot);
-    await this._loadTemplate();
-    this._updateContent();
+    await this._preRender();
+    this._render();
+    this._cacheElements();
+    this._bindEvents();
+    this._afterInit();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -46,4 +48,20 @@ export default class MediaModal extends HTMLElement {
         break;
     }
   }
+
+  disconnectedCallback() {
+    this._cleanup();
+  }
+
+  async _preRender() {
+    await this._loadTemplate();
+  }
+
+  _render() {
+    this._updateContent();
+  }
+  _bindEvents() { }
+  _cacheElements() { }
+  _afterInit() { }
+  _cleanup() { }
 }
