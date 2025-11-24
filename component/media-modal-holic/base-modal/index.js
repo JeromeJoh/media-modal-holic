@@ -25,7 +25,7 @@ export default class MediaModal extends HTMLElement {
       this.template = await res.text();
       const styleRes = await fetch(new URL('./style.css', import.meta.url));
       const styles = await styleRes.text();
-      this.shadowRoot.innerHTML = `<style>${styles}</style>` + this.template;
+      this.shadowRoot.innerHTML = this.template;
     }
   }
 
@@ -57,8 +57,14 @@ export default class MediaModal extends HTMLElement {
     await this._loadTemplate();
   }
 
-  _render() {
+  async _render() {
     this._updateContent();
+    const baseCSS = await fetch(new URL('./style.css', import.meta.url)).then(res => res.text());
+    const baseSheet = new CSSStyleSheet();
+    baseSheet.replaceSync(baseCSS);
+
+    // 合并到 adoptedStyleSheets
+    this.shadowRoot.adoptedStyleSheets = [baseSheet];
   }
   _bindEvents() { }
   _cacheElements() { }
