@@ -1,11 +1,9 @@
 import MediaModal from '../base-modal/index.js';
 
-console.log('VideoModal loaded', MediaModal);
-
 export default class AudioModal extends MediaModal {
   constructor() {
     super()
-    console.log('VideoModal constructor', this.shadowRoot.innerHTML);
+    console.log('AudioModal constructor', this.shadowRoot.innerHTML);
   }
 
   async connectedCallback() {
