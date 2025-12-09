@@ -4,12 +4,14 @@ import { loadExternalResource } from '../utils/index.js';
 export default class VideoModal extends MediaModal {
   constructor() {
     super();
-    console.log('VIDEO MODAL constructor');
   }
 
   async connectedCallback() {
     await super.connectedCallback?.();
-    console.log('VIDEO ====== modal', this.$modal);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback?.();
   }
 
   close() {
@@ -67,11 +69,14 @@ export default class VideoModal extends MediaModal {
     );
   }
 
+  _preRender() {
+    this.poster = this.getAttribute('poster');
+  }
+
   async _render() {
-    console.log('VIDEO MODAL _render', this.$modal, this.$thumb);
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    this.$thumb.innerHTML = this.$modal.innerHTML = `<video src="${this.src}" ${this.showControls ? 'controls' : ''} muted></video>`;
+    this.$thumb.innerHTML = this.$modal.innerHTML = `<video src="${this.src}" ${this.showControls ? 'controls' : ''} muted poster="${this.poster}"></video>`;
 
     const baseSheet = new CSSStyleSheet();
     baseSheet.replaceSync(css);
@@ -82,12 +87,12 @@ export default class VideoModal extends MediaModal {
     ];
   }
 
-  _preRender() {
-    console.log('VIDEO MODAL _preRender');
+  _cacheElements() {
+    this.$thumbVideo = this.$thumb.querySelector('video');
+    this.$modalVideo = this.$modal.querySelector('video');
   }
 
   _bindEvents() {
-    // hover preview (loop first 5 seconds)
     this.$thumbVideo.addEventListener("mouseenter", () => {
       this.$thumbVideo.currentTime = 0;
       this.$thumbVideo.play();
@@ -104,14 +109,10 @@ export default class VideoModal extends MediaModal {
       this.$thumbVideo.currentTime = 0;
     });
   }
-  _cacheElements() {
-    console.log('VIDEO MODAL _cacheElements', this.$modal, this.$thumb);
-    this.$thumbVideo = this.$thumb.querySelector('video');
-    this.$modalVideo = this.$modal.querySelector('video');
-    console.log('VIDEO MODAL _cacheElements', this.$modalVideo, this.$thumbVideo);
-  }
+
   _afterInit() {
   }
+
   _cleanup() {
   }
 }
