@@ -70,6 +70,7 @@ export default class VideoModal extends MediaModal {
   }
 
   _preRender() {
+    this.showControls = this.hasAttribute('controls');
     this.poster = this.getAttribute('poster');
   }
 
@@ -101,13 +102,23 @@ export default class VideoModal extends MediaModal {
           this.$thumbVideo.currentTime = 0;
         }
       }, 200);
-    });
+    }, { signal: this.controller.signal });
 
     this.$thumbVideo.addEventListener("mouseleave", () => {
       clearInterval(this.previewTimer);
       this.$thumbVideo.pause();
       this.$thumbVideo.currentTime = 0;
-    });
+      this.poster && this.$thumbVideo.load();
+    }, { signal: this.controller.signal });
+
+    document.addEventListener("visibilitychange", () => {
+      console.log('VISIBILITY CHANGE EVENT', document.visibilityState);
+      if (document.visibilityState === "visible") {
+        this.$modalVideo.play().catch(() => { });
+      } else {
+        this.$modalVideo.pause();
+      }
+    }, { signal: this.controller.signal });
   }
 
   _afterInit() {

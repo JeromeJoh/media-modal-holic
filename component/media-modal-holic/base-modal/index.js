@@ -63,6 +63,7 @@ class BaseComponent extends HTMLElement {
 
 export default class MediaModal extends BaseComponent {
   static get observedAttributes() { return ['src']; }
+  controller = new AbortController();
 
   constructor() {
     super();
@@ -83,7 +84,6 @@ export default class MediaModal extends BaseComponent {
 
   async _preRender() {
     this.src = this.getAttribute('src');
-    this.showControls = this.hasAttribute('controls');
     this.setAttribute('tabindex', '0');
   }
 
@@ -104,10 +104,11 @@ export default class MediaModal extends BaseComponent {
   _bindEvents() {
     console.log('BASE MODAL _bindEvents');
     this.addEventListener('keydown', (e) => {
-      console.log('BASE MODAL open()', this, document.activeElement);
-      // 只在聚焦时响应
       if (e.key === ' ' || e.key === 'Enter') {
+        console.log('BASE MODAL open()', this, document.activeElement);
         e.preventDefault();
+        if (this.$modal.classList.contains('active')) return;
+
         this.open();
       }
 
@@ -115,18 +116,19 @@ export default class MediaModal extends BaseComponent {
         e.preventDefault();
         this.close();
       }
-    });
+    }, { signal: this.controller.signal });
 
 
-    this.$thumb.addEventListener('click', this.open.bind(this));
+    this.$thumb.addEventListener('click', this.open.bind(this), { signal: this.controller.signal });
 
-    this.$modal.addEventListener('click', this.close.bind(this));
+    this.$modal.addEventListener('click', this.close.bind(this), { signal: this.controller.signal });
   }
 
   _afterInit() {
   }
 
   _cleanup() {
+    this.controller.abort();
     console.log('BASE MODAL _cleanup');
   }
 
