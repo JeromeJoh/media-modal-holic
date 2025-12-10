@@ -1,73 +1,42 @@
 import MediaModal from '../base-modal/index.js';
+import { loadExternalResource } from '../utils/index.js';
 
 export default class ImageModal extends MediaModal {
   constructor() {
     super()
-    console.log('ImageModal constructor', this.shadowRoot.innerHTML);
   }
 
   async connectedCallback() {
     await super.connectedCallback();
-    this.thumbVideo = this.shadowRoot.querySelector('.thumb');
-    this.modal = this.shadowRoot.querySelector('.modal');
-    console.log('modal', this.shadowRoot, this.modal, this.thumbVideo);
-    this.modalVideo = this.modal.querySelector('.modal img');
+  }
 
-    // hover preview (loop first 5 seconds)
-    this.thumbVideo.addEventListener("mouseenter", () => {
-    });
-
-    this.thumbVideo.addEventListener("mouseleave", () => {
-    });
-
-    // click → open modal
-    // this.shadowRoot.querySelector('.thumb').addEventListener('click', () => {
-    //   this.modal.classList.add('active');
-
-
-    //   // video 弹出动画
-    //   const modalAnim = this.modalVideo.animate(
-    //     [
-    //       { opacity: 0, transform: "scale(0)" },
-    //       { opacity: 1, transform: "scale(1)" }
-    //     ],
-    //     {
-    //       duration: 300,
-    //       easing: "cubic-bezier(0.22, 1, 0.36, 1)"
-    //     }
-    //   );
-
-    //   modalAnim.onfinish = () => {
-    //     this.modalVideo.currentTime = 0;
-    //   }
-
-    //   this.modal.animate(
-    //     [
-    //       { opacity: 0 },
-    //       { opacity: 1 }
-    //     ],
-    //     {
-    //       duration: 250,
-    //       easing: "ease-out"
-    //     }
-    //   );
-    // });
-
-    // click outside video → close
-    this.modal.addEventListener('click', (e) => {
-      if (e.target === this.modal) {
-        this.close();
+  open() {
+    super.open?.();
+    this.$modalImage.animate(
+      [
+        { opacity: 0, transform: "scale(0)" },
+        { opacity: 1, transform: "scale(1)" }
+      ],
+      {
+        duration: 300,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)"
       }
-    });
+    );
+
+    const modalAnim = this.$modal.animate(
+      [
+        { opacity: 0 },
+        { opacity: 1 }
+      ],
+      {
+        duration: 250,
+        easing: "ease-out"
+      }
+    );
   }
 
   close() {
-    const bg = this.modal.animate(
-      [{ opacity: 1 }, { opacity: 0 }],
-      { duration: 200, easing: "ease-in" }
-    );
-
-    const videoAnim = this.modalVideo.animate(
+    this.$modalImage.animate(
       [
         { opacity: 1, transform: "scale(1)" },
         { opacity: 0, transform: "scale(0.85)" }
@@ -75,34 +44,49 @@ export default class ImageModal extends MediaModal {
       { duration: 200, easing: "ease-in" }
     );
 
-    videoAnim.onfinish = () => {
-      this.modal.classList.remove('active');
-    };
+    const modalAnim = this.$modal.animate(
+      [{ opacity: 1 }, { opacity: 0 }],
+      { duration: 200, easing: "ease-in" }
+    );
+
+    modalAnim.onfinish = () => super.close?.();
+
   }
 
   disconnectedCallback() {
     this._cleanup();
   }
 
-  async _preRender() {
-    await this._loadTemplate();
+  _preRender() {
+    this.autoplay = this.hasAttribute('autoplay');
+    this.title = this.getAttribute('title') || 'image';
   }
 
   async _render() {
-    await super._render();
-    this._updateContent();
-    const baseCSS = await fetch(new URL('./style.css', import.meta.url)).then(res => res.text());
+    const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
+
+    this.$thumb.innerHTML = this.$modal.innerHTML = `<img src="${this.src}" ${this.autoplay ? 'autoplay' : ''} alt="${this.title}">`;
+
     const baseSheet = new CSSStyleSheet();
-    baseSheet.replaceSync(baseCSS);
-    console.log('sdddcsdvc', this.shadowRoot.adoptedStyleSheets, baseSheet);
+    baseSheet.replaceSync(css);
 
     this.shadowRoot.adoptedStyleSheets = [
       ...this.shadowRoot.adoptedStyleSheets,
       baseSheet
     ];
   }
-  _bindEvents() { }
-  _cacheElements() { }
+
+  _cacheElements() {
+    this.$thumbImage = this.$thumb.querySelector('img');
+    this.$modalImage = this.$modal.querySelector('img');
+  }
+
+
+  _bindEvents() {
+
+  }
+
   _afterInit() { }
+
   _cleanup() { }
 }

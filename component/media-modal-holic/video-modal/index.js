@@ -14,31 +14,9 @@ export default class VideoModal extends MediaModal {
     super.disconnectedCallback?.();
   }
 
-  close() {
-    super.close?.();
-    this.$modal.animate(
-      [{ opacity: 1 }, { opacity: 0 }],
-      { duration: 200, easing: "ease-in" }
-    );
-
-    const videoAnim = this.$modalVideo.animate(
-      [
-        { opacity: 1, transform: "scale(1)" },
-        { opacity: 0, transform: "scale(0.85)" }
-      ],
-      { duration: 200, easing: "ease-in" }
-    );
-
-    videoAnim.onfinish = () => {
-      this.$modalVideo.pause();
-    };
-  }
-
   open() {
     super.open?.();
-
     console.log('OPEN MODAL AT VIDEO OPEN');
-    // video 弹出动画
     const modalAnim = this.$modalVideo.animate(
       [
         { opacity: 0, transform: "scale(0)" },
@@ -51,12 +29,10 @@ export default class VideoModal extends MediaModal {
     );
 
     modalAnim.onfinish = () => {
-      console.log(23345345, this.$modalVideo);
       this.$modalVideo.currentTime = 0;
       this.$modalVideo.play();
     }
 
-    // 背景淡入
     this.$modal.animate(
       [
         { opacity: 0 },
@@ -67,6 +43,25 @@ export default class VideoModal extends MediaModal {
         easing: "ease-out"
       }
     );
+  }
+
+  close() {
+    const videoAnim = this.$modalVideo.animate(
+      [
+        { opacity: 1, transform: "scale(1)" },
+        { opacity: 0, transform: "scale(0.85)" }
+      ],
+      { duration: 200, easing: "ease-in" }
+    );
+
+    const modalAnim = this.$modal.animate(
+      [{ opacity: 1 }, { opacity: 0 }],
+      { duration: 200, easing: "ease-in" }
+    );
+
+    videoAnim.onfinish = () => this.$modalVideo.pause();
+
+    modalAnim.onfinish = () => super.close?.();
   }
 
   _preRender() {
