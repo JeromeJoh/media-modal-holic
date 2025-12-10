@@ -72,7 +72,8 @@ export default class VideoModal extends MediaModal {
   async _render() {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    this.$thumb.innerHTML = this.$modal.innerHTML = `<video src="${this.src}" ${this.showControls ? 'controls' : ''} muted poster="${this.poster}"></video>`;
+    this.$thumb.innerHTML = `<video src="${this.src}" muted poster="${this.poster}"></video>`;
+    this.$modal.innerHTML = this.$modal.innerHTML = `<video src="${this.src}" ${this.showControls ? 'controls' : ''}></video>`;
 
     const baseSheet = new CSSStyleSheet();
     baseSheet.replaceSync(css);
@@ -108,6 +109,7 @@ export default class VideoModal extends MediaModal {
 
     document.addEventListener("visibilitychange", () => {
       console.log('VISIBILITY CHANGE EVENT', document.visibilityState);
+      if (!this.$modal.classList.contains('active')) return;
       if (document.visibilityState === "visible") {
         this.$modalVideo.play().catch(() => { });
       } else {

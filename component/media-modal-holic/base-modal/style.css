@@ -27,7 +27,6 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  border: 2px solid lime;
 }
 
 .modal.active {

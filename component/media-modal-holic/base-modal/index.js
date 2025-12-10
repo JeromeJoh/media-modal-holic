@@ -98,11 +98,9 @@ export default class MediaModal extends BaseComponent {
   _cacheElements() {
     this.$modal = this.shadowRoot.querySelector('.modal');
     this.$thumb = this.shadowRoot.querySelector('.thumb');
-    console.log('BASE MODAL _cacheElements', this.shadowRoot, this.$modal, this.$thumb);
   }
 
   _bindEvents() {
-    console.log('BASE MODAL _bindEvents');
     this.addEventListener('keydown', (e) => {
       if (e.key === ' ' || e.key === 'Enter') {
         console.log('BASE MODAL open()', this, document.activeElement);
