@@ -8,3 +8,7 @@
   display: grid;
   place-items: center;
 }
+
+.thumb audio {
+  visibility: hidden;
+}

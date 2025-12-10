@@ -1,86 +1,51 @@
 import MediaModal from '../base-modal/index.js';
+import { loadExternalResource } from '../utils/index.js';
 
 export default class AudioModal extends MediaModal {
   constructor() {
     super()
-    console.log('AudioModal constructor', this.shadowRoot.innerHTML);
   }
 
   async connectedCallback() {
     await super.connectedCallback();
-    this.thumbVideo = this.shadowRoot.querySelector('.thumb audio');
-    this.modal = this.shadowRoot.querySelector('.modal');
-    console.log('AUDIO ====== modal', this.shadowRoot, this.modal, this.thumbVideo);
-    this.modalVideo = this.modal.querySelector('audio');
+  }
 
-    // hover preview (loop first 5 seconds)
-    this.thumbVideo.addEventListener("mouseenter", () => {
-      console.log('mouseenter');
-      this.thumbVideo.currentTime = 0;
-      this.thumbVideo.play();
-      this.previewTimer = setInterval(() => {
-        if (this.thumbVideo.currentTime >= 5) {
-          this.thumbVideo.currentTime = 0;
-        }
-      }, 200);
-    });
+  disconnectedCallback() {
+    this._cleanup();
+  }
 
-    this.thumbVideo.addEventListener("mouseleave", () => {
-      clearInterval(this.previewTimer);
-      this.thumbVideo.pause();
-      this.thumbVideo.currentTime = 0;
-    });
-
-    // click → open modal
-    this.shadowRoot.querySelector('.thumb').addEventListener('click', () => {
-      this.modal.classList.add('active');
-
-
-      // video 弹出动画
-      const modalAnim = this.modalVideo.animate(
-        [
-          { opacity: 0, transform: "scale(0)" },
-          { opacity: 1, transform: "scale(1)" }
-        ],
-        {
-          duration: 300,
-          easing: "cubic-bezier(0.22, 1, 0.36, 1)"
-        }
-      );
-
-      modalAnim.onfinish = () => {
-        this.modalVideo.currentTime = 0;
-        this.modalVideo.play();
+  open() {
+    super.open?.();
+    const modalAnim = this.$modalAudio.animate(
+      [
+        { opacity: 0, transform: "scale(0)" },
+        { opacity: 1, transform: "scale(1)" }
+      ],
+      {
+        duration: 300,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)"
       }
+    );
 
-      // 背景淡入
-      this.modal.animate(
-        [
-          { opacity: 0 },
-          { opacity: 1 }
-        ],
-        {
-          duration: 250,
-          easing: "ease-out"
-        }
-      );
-    });
+    modalAnim.onfinish = () => {
+      this.$modalAudio.currentTime = 0;
+      this.$modalAudio.play();
+    }
 
-    // click outside video → close
-    this.modal.addEventListener('click', (e) => {
-      if (e.target === this.modal) {
-        this.close();
+    this.$modal.animate(
+      [
+        { opacity: 0 },
+        { opacity: 1 }
+      ],
+      {
+        duration: 250,
+        easing: "ease-out"
       }
-    });
+    );
   }
 
   close() {
-    const bg = this.modal.animate(
-      [{ opacity: 1 }, { opacity: 0 }],
-      { duration: 200, easing: "ease-in" }
-    );
-
-    const videoAnim = this.modalVideo.animate(
+    const audioAnim = this.$modalAudio.animate(
       [
         { opacity: 1, transform: "scale(1)" },
         { opacity: 0, transform: "scale(0.85)" }
@@ -88,36 +53,42 @@ export default class AudioModal extends MediaModal {
       { duration: 200, easing: "ease-in" }
     );
 
-    videoAnim.onfinish = () => {
-      this.modal.classList.remove('active');
-      this.modalVideo.pause();
-    };
-  }
+    const modalAnim = this.$modal.animate(
+      [{ opacity: 1 }, { opacity: 0 }],
+      { duration: 200, easing: "ease-in" }
+    );
 
-  disconnectedCallback() {
-    this._cleanup();
+    audioAnim.onfinish = () => this.$modalAudio.pause();
+
+    modalAnim.onfinish = () => super.close?.();
   }
 
   async _preRender() {
-    await this._loadTemplate();
+    this.showControls = this.hasAttribute('controls');
   }
 
   async _render() {
-    await super._render();
-    this._updateContent();
-    const baseCSS = await fetch(new URL('./style.css', import.meta.url)).then(res => res.text());
-    const baseSheet = new CSSStyleSheet();
-    baseSheet.replaceSync(baseCSS);
-    console.log('sdddcsdvc', this.shadowRoot.adoptedStyleSheets, baseSheet);
+    const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    // 合并父 + 子 stylesheet
+    this.$thumb.innerHTML = this.$modal.innerHTML = `<audio src="${this.src}" ${this.showControls ? 'controls' : ''}></audio>`;
+
+    const baseSheet = new CSSStyleSheet();
+    baseSheet.replaceSync(css);
+
     this.shadowRoot.adoptedStyleSheets = [
-      ...this.shadowRoot.adoptedStyleSheets, // 父类已有的 sheet
-      baseSheet                             // 子类 sheet
+      ...this.shadowRoot.adoptedStyleSheets,
+      baseSheet
     ];
   }
+
+  _cacheElements() {
+    this.$thumbAudio = this.$thumb.querySelector('audio');
+    this.$modalAudio = this.$modal.querySelector('audio');
+  }
+
   _bindEvents() { }
-  _cacheElements() { }
+
   _afterInit() { }
+
   _cleanup() { }
 }
