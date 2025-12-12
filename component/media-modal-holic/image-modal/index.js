@@ -60,6 +60,14 @@ export default class ImageModal extends MediaModal {
   _preRender() {
     this.autoplay = this.hasAttribute('autoplay');
     this.title = this.getAttribute('title') || 'image';
+    this.width = this.getAttribute('width');
+    this.aspectRatio = this.getAttribute('aspect-ratio');
+    this.style.setProperty('--preview-width', this.width ?? '260px');
+
+    const img = new Image();
+    img.src = this.src;
+    img.onload = () => this.style.setProperty('--preview-aspect-ratio', this.aspectRatio ?? img.width / img.height);
+    ;
   }
 
   async _render() {

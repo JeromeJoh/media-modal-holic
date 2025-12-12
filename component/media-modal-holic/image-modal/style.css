@@ -1,9 +1,6 @@
 .thumb {
-  width: 260px;
-  height: 150px;
-  background: #000;
-  overflow: hidden;
-  border: 2px solid red;
+  width: var(--preview-width, 260px);
+  aspect-ratio: var(--preview-aspect-ratio, 1 / 1);
 }
 
 img {
