@@ -97,7 +97,7 @@ export default class MediaModal extends BaseComponent {
 
   _cacheElements() {
     this.$modal = this.shadowRoot.querySelector('.modal');
-    this.$thumb = this.shadowRoot.querySelector('.thumb');
+    this.$thumb = this.shadowRoot.querySelector('.thumbnail');
   }
 
   _bindEvents() {

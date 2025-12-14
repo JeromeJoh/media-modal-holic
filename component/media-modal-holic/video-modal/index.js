@@ -72,7 +72,7 @@ export default class VideoModal extends MediaModal {
   async _render() {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    this.$thumb.innerHTML = `<video src="${this.src}" muted poster="${this.poster}"></video>`;
+    this.$thumb.innerHTML = `<video src="${this.src}" muted ${this.poster ? `poster="${this.poster}"` : ''}></video>`;
     this.$modal.innerHTML = this.$modal.innerHTML = `<video src="${this.src}" ${this.showControls ? 'controls' : ''}></video>`;
 
     const baseSheet = new CSSStyleSheet();
@@ -101,6 +101,7 @@ export default class VideoModal extends MediaModal {
     }, { signal: this.controller.signal });
 
     this.$thumbVideo.addEventListener("mouseleave", () => {
+      if (!this.previewTimer) return;
       clearInterval(this.previewTimer);
       this.$thumbVideo.pause();
       this.$thumbVideo.currentTime = 0;

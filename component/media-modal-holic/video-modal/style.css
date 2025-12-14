@@ -1,4 +1,15 @@
-.thumb {
+.thumbnail {
   width: 260px;
   height: 150px;
+}
+
+video {
+  width: 100%;
+  heigth: 100%;
+}
+
+.modal video {
+  width: 80vw;
+  height: auto;
+  max-height: 80vh;
 }

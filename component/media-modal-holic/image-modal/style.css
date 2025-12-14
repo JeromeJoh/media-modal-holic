@@ -1,4 +1,4 @@
-.thumb {
+.thumbnail {
   width: var(--preview-width, 260px);
   aspect-ratio: var(--preview-aspect-ratio, 1 / 1);
 }
