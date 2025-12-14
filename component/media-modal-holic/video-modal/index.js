@@ -67,6 +67,21 @@ export default class VideoModal extends MediaModal {
   _preRender() {
     this.showControls = this.hasAttribute('controls');
     this.poster = this.getAttribute('poster');
+    this.width = this.getAttribute('width');
+    this.aspectRatio = this.getAttribute('aspect-ratio');
+    this.style.setProperty('--preview-width', this.width ?? '200px');
+
+    const vid = document.createElement('video');
+    vid.src = this.src;
+    vid.preload = 'metadata';
+
+    vid.addEventListener('loadedmetadata', () => {
+      const ratio = vid.videoWidth / vid.videoHeight;
+      this.style.setProperty(
+        '--preview-aspect-ratio',
+        this.aspectRatio ?? ratio
+      );
+    });
   }
 
   async _render() {
