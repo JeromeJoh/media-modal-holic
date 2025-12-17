@@ -1,3 +1,7 @@
+:host {
+  --box-size: 200px;
+}
+
 .thumbnail {
   width: var(--preview-width, 260px);
   aspect-ratio: var(--preview-aspect-ratio, 1 / 1);
@@ -5,11 +9,77 @@
 
 video {
   width: 100%;
-  heigth: 100%;
+  height: 100%;
 }
 
 .modal video {
   width: 80vw;
   height: auto;
   max-height: 80vh;
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: auto;
+  max-height: 80vh;
+  z-index: 100;
+  aspect-ratio: var(--preview-aspect-ratio, 1 / 1);
+  border: solid 2px red;
+}
+
+.v-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* overflow: hidden; */
+  /* clip-path: inset(100% 0 0 0);
+      animation: reveal 0.8s ease-out forwards; */
+}
+
+@keyframes reveal {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.stroke {
+  position: absolute;
+  inset: 0;
+  border: solid 1px navy;
+  clip-path: inset(0 0 100% 0);
+}
+
+.right.stroke {
+  clip-path: inset(100% 0 0 0);
+}
+
+.v-container.active .stroke {
+  animation: reveal 0.3s ease-out forwards;
+}
+
+.stroke p {
+  position: absolute;
+  width: calc(var(--box-size) / 5);
+  height: 100%;
+  top: 0;
+  left: 50%;
+  /* transform: translate(-50%, 0); */
+  background: royalblue;
+  transform-origin: bottom;
+  /* transform: scaleY(0) translateY(-10%);
+      transition: transform 0.8s linear; */
+  /* animation-composition: add; */
+}
+
+.left p {
+  transform: skewX(30deg) translate(-50%, 0);
+}
+
+.right p {
+  transform: skewX(-30deg) translate(-50%, 0);
+  background-color: crimson;
 }

@@ -4,6 +4,13 @@
   cursor: pointer;
 }
 
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+}
+
 /* thumbnail */
 .thumbnail {
   background: #000;

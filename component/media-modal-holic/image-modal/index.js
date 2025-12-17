@@ -1,5 +1,5 @@
 import MediaModal from '../base-modal/index.js';
-import { loadExternalResource } from '../utils/index.js';
+import { loadExternalResource, applyTemplate } from '../utils/index.js';
 
 export default class ImageModal extends MediaModal {
   constructor() {
@@ -59,7 +59,7 @@ export default class ImageModal extends MediaModal {
 
   _preRender() {
     this.autoplay = this.hasAttribute('autoplay');
-    this.title = this.getAttribute('title') || 'image';
+    this.title = this.getAttribute('title') || 'image caption';
     this.width = this.getAttribute('width');
     this.aspectRatio = this.getAttribute('aspect-ratio');
     this.style.setProperty('--preview-width', this.width ?? '260px');
@@ -73,7 +73,10 @@ export default class ImageModal extends MediaModal {
   async _render() {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    this.$thumb.innerHTML = this.$modal.innerHTML = `<img src="${this.src}" ${this.autoplay ? 'autoplay' : ''} alt="${this.title}">`;
+    this.$modal.innerHTML = this.$thumb.innerHTML = applyTemplate(html, {
+      src: this.src,
+      title: this.title
+    });
 
     const baseSheet = new CSSStyleSheet();
     baseSheet.replaceSync(css);

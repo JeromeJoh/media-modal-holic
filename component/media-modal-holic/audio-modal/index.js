@@ -1,5 +1,5 @@
 import MediaModal from '../base-modal/index.js';
-import { loadExternalResource } from '../utils/index.js';
+import { loadExternalResource, applyTemplate } from '../utils/index.js';
 
 export default class AudioModal extends MediaModal {
   constructor() {
@@ -64,7 +64,6 @@ export default class AudioModal extends MediaModal {
   }
 
   async _preRender() {
-    this.showControls = this.hasAttribute('controls');
     this.cover = this.getAttribute('cover');
     this.size = this.getAttribute('size') || '200px';
     this.$thumb.style.setProperty('--cover-size', this.size);
@@ -74,7 +73,10 @@ export default class AudioModal extends MediaModal {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
     this.$thumb.innerHTML = `<img src="${this.cover}" alt="Audio cover"></img>`;
-    this.$modal.innerHTML = `<audio src="${this.src}" ${this.showControls ? 'controls' : ''}></audio>`;
+    this.$modal.innerHTML = applyTemplate(html, {
+      src: this.src,
+      cover: this.cover
+    });
 
     const baseSheet = new CSSStyleSheet();
     baseSheet.replaceSync(css);

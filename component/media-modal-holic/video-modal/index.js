@@ -1,5 +1,5 @@
 import MediaModal from '../base-modal/index.js';
-import { loadExternalResource } from '../utils/index.js';
+import { loadExternalResource, applyTemplate } from '../utils/index.js';
 
 export default class VideoModal extends MediaModal {
   constructor() {
@@ -14,7 +14,7 @@ export default class VideoModal extends MediaModal {
     super.disconnectedCallback?.();
   }
 
-  open() {
+  async open() {
     super.open?.();
     console.log('OPEN MODAL AT VIDEO OPEN');
     const modalAnim = this.$modalVideo.animate(
@@ -31,6 +31,23 @@ export default class VideoModal extends MediaModal {
     modalAnim.onfinish = () => {
       this.$modalVideo.currentTime = 0;
       this.$modalVideo.play();
+      const v = this.$modal.querySelector('.v-container');
+      v && v.classList.add('active');
+
+      v.addEventListener('animationend', () => {
+        v.animate([
+          {
+            opacity: 1,
+          },
+          {
+            opacity: 0,
+          }
+        ],
+          {
+            duration: 300,
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)"
+          })
+      })
     }
 
     this.$modal.animate(
@@ -88,7 +105,12 @@ export default class VideoModal extends MediaModal {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
     this.$thumb.innerHTML = `<video src="${this.src}" muted ${this.poster ? `poster="${this.poster}"` : ''}></video>`;
-    this.$modal.innerHTML = this.$modal.innerHTML = `<video src="${this.src}" ${this.showControls ? 'controls' : ''}></video>`;
+
+    this.$modal.innerHTML = applyTemplate(html, {
+      src: this.src,
+      poster: this.poster,
+      controls: this.showControls
+    })
 
     const baseSheet = new CSSStyleSheet();
     baseSheet.replaceSync(css);
