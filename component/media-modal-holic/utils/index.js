@@ -9,3 +9,7 @@ export function applyTemplate(html, vars) {
     return String(vars[key]);
   });
 }
+
+export function svgToDataUrl(svg) {
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}

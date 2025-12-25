@@ -17,15 +17,31 @@
 } */
 
 .modal .image-container {
+  position: relative;
   width: min(50vw, 50vh);
   aspect-ratio: 1 / 1;
   /* border-radius: 50%; */
   overflow: hidden;
-  border: solid lime 2px;
 }
 
-.image-container img {
+.image-container .cover {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  transform: scale(0);
+  opacity: 0;
+  mask-size: cover;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  /* mask-mode: luminance; */
+}
+
+.image-container .mask {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  z-index: 10;
 }
