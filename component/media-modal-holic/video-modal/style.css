@@ -2,6 +2,10 @@
   --box-size: 200px;
 }
 
+:host([round]) .modal {
+  background-color: red;
+}
+
 .thumbnail {
   width: var(--preview-width, 260px);
   aspect-ratio: var(--preview-aspect-ratio, 1 / 1);
@@ -19,16 +23,18 @@ video {
 }
 
 .overlay {
+  display: none;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80vw;
-  height: auto;
-  max-height: 80vh;
+  width: min(30vw, 30vh);
   z-index: 100;
-  aspect-ratio: var(--preview-aspect-ratio, 1 / 1);
-  border: solid 2px red;
+  aspect-ratio: 2 / 1;
+}
+
+.active.overlay {
+  display: block;
 }
 
 .v-container {
@@ -49,7 +55,6 @@ video {
 .stroke {
   position: absolute;
   inset: 0;
-  border: solid 1px navy;
   clip-path: inset(0 0 100% 0);
 }
 
@@ -57,18 +62,18 @@ video {
   clip-path: inset(100% 0 0 0);
 }
 
-.v-container.active .stroke {
-  animation: reveal 0.3s ease-out forwards;
+.overlay.active .stroke {
+  animation: reveal 0.4s ease-out forwards;
 }
 
 .stroke p {
   position: absolute;
-  width: calc(var(--box-size) / 5);
+  width: calc(var(--box-size) / 10);
   height: 100%;
   top: 0;
   left: 50%;
   /* transform: translate(-50%, 0); */
-  background: royalblue;
+  background: black;
   transform-origin: bottom;
   /* transform: scaleY(0) translateY(-10%);
       transition: transform 0.8s linear; */
@@ -81,5 +86,4 @@ video {
 
 .right p {
   transform: skewX(-30deg) translate(-50%, 0);
-  background-color: crimson;
 }

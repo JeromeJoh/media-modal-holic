@@ -14,9 +14,9 @@ export default class VideoModal extends MediaModal {
     super.disconnectedCallback?.();
   }
 
-  async open() {
+  async open(e) {
     super.open?.();
-    console.log('OPEN MODAL AT VIDEO OPEN');
+    console.log('OPEN MODAL AT VIDEO OPEN', e.target.tagName);
     const modalAnim = this.$modalVideo.animate(
       [
         { opacity: 0, transform: "scale(0)" },
@@ -30,23 +30,24 @@ export default class VideoModal extends MediaModal {
 
     modalAnim.onfinish = () => {
       this.$modalVideo.currentTime = 0;
-      this.$modalVideo.play();
-      const v = this.$modal.querySelector('.v-container');
+      // this.$modalVideo.play();
+      const v = this.$modal.querySelector('.overlay');
       v && v.classList.add('active');
 
       v.addEventListener('animationend', () => {
-        v.animate([
-          {
-            opacity: 1,
-          },
-          {
-            opacity: 0,
-          }
-        ],
-          {
-            duration: 300,
-            easing: "cubic-bezier(0.22, 1, 0.36, 1)"
-          })
+        // v.animate([
+        //   {
+        //     opacity: 1,9
+        //   },
+        //   {
+        //     opacity: 0,
+        //   }
+        // ],
+        //   {
+        //     duration: 300,
+        //     easing: "cubic-bezier(0.22, 1, 0.36, 1)"
+        //   })
+        // setTimeout(() => v.classList.remove('active'), 400);
       })
     }
 
@@ -62,7 +63,9 @@ export default class VideoModal extends MediaModal {
     );
   }
 
-  close() {
+  close(e) {
+    console.log('CLOSE MODAL AT VIDEO CLOSE', e.target);
+    if (e.target.tagName === 'VIDEO') return;
     const videoAnim = this.$modalVideo.animate(
       [
         { opacity: 1, transform: "scale(1)" },
