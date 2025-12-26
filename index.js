@@ -7,7 +7,7 @@ customElements.define('image-modal-holic', ImageModal);
 customElements.define('audio-modal-holic', AudioModal);
 
 
-// TODO: add modal open animation - V M A letter animation
-// TODO: seperate dom structure to html files
+
 // TODO: new register function to auto define custom elements
 // TODO: image modal add figure caption
+// TODO: video & audio play progress bar control
