@@ -14,11 +14,13 @@ export default class ImageModal extends MediaModal {
     super.open?.();
     this.$modalImage.animate(
       [
-        { opacity: 0, transform: "scale(0)" },
-        { opacity: 1, transform: "scale(1)" }
+        { opacity: 0, transform: "scale(0) translateY(0px)", filter: "blur(20px)" },
+        { opacity: 0, transform: "scale(0.35) translateY(-80px)" },
+        { opacity: 0.7, transform: "scale(0.7) translateY(50px)" },
+        { opacity: 1, transform: "scale(1) translateY(0px)", filter: "blur(0px)" }
       ],
       {
-        duration: 300,
+        duration: 700,
         easing: "cubic-bezier(0.22, 1, 0.36, 1)"
       }
     );
@@ -33,6 +35,8 @@ export default class ImageModal extends MediaModal {
         easing: "ease-out"
       }
     );
+
+    this.$container.classList.add('active');
   }
 
   close() {
@@ -59,7 +63,7 @@ export default class ImageModal extends MediaModal {
 
   _preRender() {
     this.autoplay = this.hasAttribute('autoplay');
-    this.title = this.getAttribute('title') || 'image caption';
+    this.imageCaption = this.getAttribute('title') || 'image caption';
     this.width = this.getAttribute('width');
     this.aspectRatio = this.getAttribute('aspect-ratio');
     this.style.setProperty('--preview-width', this.width ?? '260px');
@@ -73,9 +77,10 @@ export default class ImageModal extends MediaModal {
   async _render() {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    this.$modal.innerHTML = this.$thumb.innerHTML = applyTemplate(html, {
+    this.$thumb.innerHTML = `<img src="${this.src}" alt="${this.imageCaption}" title="${this.imageCaption}"></img>`
+    this.$modal.innerHTML = applyTemplate(html, {
       src: this.src,
-      title: this.title
+      imageCaption: this.imageCaption
     });
 
     const baseSheet = new CSSStyleSheet();
@@ -90,6 +95,7 @@ export default class ImageModal extends MediaModal {
   _cacheElements() {
     this.$thumbImage = this.$thumb.querySelector('img');
     this.$modalImage = this.$modal.querySelector('img');
+    this.$container = this.$modal.querySelector('.container');
   }
 
 
