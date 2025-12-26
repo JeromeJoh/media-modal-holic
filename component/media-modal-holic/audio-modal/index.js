@@ -61,7 +61,7 @@ export default class AudioModal extends MediaModal {
       )
       .onfinish = () => {
         this.$modalAudio.currentTime = 0;
-        this.$modalAudio.play();
+        // this.$modalAudio.play();
         requestAnimationFrame(() => {
           this.$vinyl.style.animationPlayState = 'running';
         })

@@ -20,12 +20,18 @@
   position: relative;
   width: min(50vw, 50vh);
   aspect-ratio: 1 / 1;
-  animation: spin 10s linear infinite;
+  animation: spin 5s linear infinite;
   animation-play-state: paused;
-  /* border-radius: 50%; */
+  border-radius: 50%;
+  box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.5);
+  transition: box-shadow 200ms ease;
   /* overflow: hidden; */
   /* filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18))
     drop-shadow(0 16px 32px rgba(0, 0, 0, 0.12)); */
+}
+
+.image-container:hover {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
 .image-container .cover {
