@@ -87,3 +87,14 @@ video {
 .right p {
   transform: skewX(-30deg) translate(-50%, 0);
 }
+
+.container {
+  position: relative;
+}
+
+.mask {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background-color: red;
+}

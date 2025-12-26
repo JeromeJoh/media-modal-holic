@@ -61,6 +61,29 @@ export default class VideoModal extends MediaModal {
         easing: "ease-out"
       }
     );
+
+    const first = this.$container.animate(
+      [
+        { clipPath: 'inset(0% 100% 95% 0%)' },
+        { clipPath: 'inset(0% 0% 95% 0%)' }
+      ],
+      {
+        duration: 300,
+        easing: "ease-in-out"
+      }
+    );
+
+    await first.finished;
+    this.$container.animate(
+      [
+        { clipPath: 'inset(0% 0% 95% 0%)' },
+        { clipPath: 'inset(0% 0% 0% 0%)' }
+      ],
+      {
+        duration: 600,
+        easing: "ease-out"
+      }
+    );
   }
 
   close(e) {
@@ -127,6 +150,7 @@ export default class VideoModal extends MediaModal {
   _cacheElements() {
     this.$thumbVideo = this.$thumb.querySelector('video');
     this.$modalVideo = this.$modal.querySelector('video');
+    this.$container = this.$modal.querySelector('.container');
   }
 
   _bindEvents() {
