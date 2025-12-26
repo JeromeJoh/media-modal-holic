@@ -47,21 +47,24 @@ export default class AudioModal extends MediaModal {
       }
     )
 
-    this.$modalCover
+    this.$coverImage
       .animate(
         [
           { opacity: 0, transform: "scale(0) rotate(-15deg)" },
           { opacity: 1, transform: "scale(1) rotate(0deg)" }
         ],
         {
-          duration: 300,
-          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+          duration: 750,
+          easing: "cubic-bezier(1, 0, 0, 1)",
           fill: 'forwards'
         }
       )
       .onfinish = () => {
         this.$modalAudio.currentTime = 0;
         this.$modalAudio.play();
+        requestAnimationFrame(() => {
+          this.$vinyl.style.animationPlayState = 'running';
+        })
       }
 
   }
@@ -112,14 +115,27 @@ export default class AudioModal extends MediaModal {
   _cacheElements() {
     this.$thumbAudio = this.$thumb.querySelector('audio');
     this.$modalAudio = this.$modal.querySelector('audio');
-    this.$modalCover = this.$modal.querySelector('.image-container img');
+    this.$vinyl = this.$modal.querySelector('.image-container');
+    this.$coverImage = this.$modal.querySelector('.image-container img');
   }
 
-  _bindEvents() { }
+  _bindEvents() {
+    this.$coverImage.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (this.$modalAudio.paused) {
+        this.$modalAudio.play();
+        this.$vinyl.style.animationPlayState = 'running';
+      } else {
+        this.$modalAudio.pause();
+        this.$vinyl.style.animationPlayState = 'paused';
+      }
+    });
+  }
 
   _afterInit() {
-    this.$modalCover.style.maskImage = `url("${svgToDataUrl(svg)}")`;
-    this.$modalCover.style.webkitMaskImage = `url("${svgToDataUrl(svg)}")`;
+    this.$coverImage.style.maskImage = `url("${svgToDataUrl(svg)}")`;
+    this.$coverImage.style.webkitMaskImage = `url("${svgToDataUrl(svg)}")`;
   }
 
   _cleanup() { }
