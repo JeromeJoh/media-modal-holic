@@ -1,6 +1,5 @@
 import MediaModal from '../base-modal/index.js';
 import { loadExternalResource, applyTemplate, svgToDataUrl } from '../utils/index.js';
-import AnimationQueue from '../utils/animation-queue.js';
 
 const svg = `
 <svg
@@ -36,9 +35,8 @@ export default class AudioModal extends MediaModal {
 
   async open() {
     super.open?.();
-    const animationQueue = new AnimationQueue({ autoPlay: true });
 
-    animationQueue.add(() => this.$modal.animate(
+    this.$modal.animate(
       [
         { opacity: 0 },
         { opacity: 1 }
@@ -47,11 +45,9 @@ export default class AudioModal extends MediaModal {
         duration: 250,
         easing: "ease-out"
       }
-    ), {
-      onFinish: () => console.log('step1')
-    })
+    )
 
-    animationQueue.add(() => this.$modalCover
+    this.$modalCover
       .animate(
         [
           { opacity: 0, transform: "scale(0)" },
@@ -62,15 +58,11 @@ export default class AudioModal extends MediaModal {
           easing: "cubic-bezier(0.22, 1, 0.36, 1)",
           fill: 'forwards'
         }
-      ), {
-      onFinish: () => {
-        console.log('step2')
-        this.$modalAudio.currentTime = 0;
-        this.$modalAudio.play();
-      }
-    })
+      )
+      .onfinish = () => {
 
-    animationQueue.play();
+      }
+
   }
 
   close() {
