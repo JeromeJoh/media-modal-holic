@@ -50,8 +50,8 @@ export default class AudioModal extends MediaModal {
     this.$modalCover
       .animate(
         [
-          { opacity: 0, transform: "scale(0)" },
-          { opacity: 1, transform: "scale(1)" }
+          { opacity: 0, transform: "scale(0) rotate(-15deg)" },
+          { opacity: 1, transform: "scale(1) rotate(0deg)" }
         ],
         {
           duration: 300,
@@ -60,7 +60,8 @@ export default class AudioModal extends MediaModal {
         }
       )
       .onfinish = () => {
-
+        this.$modalAudio.currentTime = 0;
+        this.$modalAudio.play();
       }
 
   }
