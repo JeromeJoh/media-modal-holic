@@ -1,5 +1,6 @@
 :host {
   --box-size: 200px;
+  --progress-bar-width: 4px;
 }
 
 :host([round]) .modal {
@@ -90,6 +91,7 @@ video {
 
 .container {
   position: relative;
+  /* border: solid 1px lime; */
 }
 
 .mask {
@@ -97,4 +99,14 @@ video {
   z-index: 1;
   inset: 0;
   background-color: red;
+}
+
+.progress-bar {
+  width: 100%;
+  height: var(--progress-bar-width);
+  background-color: lime;
+  transform-origin: left;
+  transform: scaleX(var(--progress));
+  will-change: transform;
+  transition: all 0.15s;
 }

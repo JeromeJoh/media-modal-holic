@@ -30,25 +30,25 @@ export default class VideoModal extends MediaModal {
 
     modalAnim.onfinish = () => {
       this.$modalVideo.currentTime = 0;
-      // this.$modalVideo.play();
-      const v = this.$modal.querySelector('.overlay');
-      v && v.classList.add('active');
+      this.$modalVideo.play();
+      // const v = this.$modal.querySelector('.overlay');
+      // v && v.classList.add('active');
 
-      v.addEventListener('animationend', () => {
-        // v.animate([
-        //   {
-        //     opacity: 1,9
-        //   },
-        //   {
-        //     opacity: 0,
-        //   }
-        // ],
-        //   {
-        //     duration: 300,
-        //     easing: "cubic-bezier(0.22, 1, 0.36, 1)"
-        //   })
-        // setTimeout(() => v.classList.remove('active'), 400);
-      })
+      // v.addEventListener('animationend', () => {
+      //   v.animate([
+      //     {
+      //       opacity: 1, 9
+      //     },
+      //     {
+      //       opacity: 0,
+      //     }
+      //   ],
+      //     {
+      //       duration: 300,
+      //       easing: "cubic-bezier(0.22, 1, 0.36, 1)"
+      //     })
+      //   setTimeout(() => v.classList.remove('active'), 400);
+      // })
     }
 
     this.$modal.animate(
@@ -64,8 +64,8 @@ export default class VideoModal extends MediaModal {
 
     const first = this.$container.animate(
       [
-        { clipPath: 'inset(0% 100% 95% 0%)' },
-        { clipPath: 'inset(0% 0% 95% 0%)' }
+        { clipPath: 'inset(0% 100% 98% 0%)' },
+        { clipPath: 'inset(0% 0% 98% 0%)' }
       ],
       {
         duration: 300,
@@ -74,9 +74,9 @@ export default class VideoModal extends MediaModal {
     );
 
     await first.finished;
-    this.$container.animate(
+    const second = this.$container.animate(
       [
-        { clipPath: 'inset(0% 0% 95% 0%)' },
+        { clipPath: 'inset(0% 0% 98% 0%)' },
         { clipPath: 'inset(0% 0% 0% 0%)' }
       ],
       {
@@ -84,11 +84,13 @@ export default class VideoModal extends MediaModal {
         easing: "ease-out"
       }
     );
+    await second.finished;
+    this.$container.style.setProperty('--progress', '0%')
   }
 
   close(e) {
     console.log('CLOSE MODAL AT VIDEO CLOSE', e.target);
-    if (e.target.tagName === 'VIDEO') return;
+    // if (e.target.tagName === 'VIDEO') return;
     const videoAnim = this.$modalVideo.animate(
       [
         { opacity: 1, transform: "scale(1)" },
@@ -104,7 +106,10 @@ export default class VideoModal extends MediaModal {
 
     videoAnim.onfinish = () => this.$modalVideo.pause();
 
-    modalAnim.onfinish = () => super.close?.();
+    modalAnim.onfinish = () => {
+      super.close?.();
+      this.$container.style.setProperty('--progress', '1')
+    };
   }
 
   _preRender() {
@@ -171,6 +176,31 @@ export default class VideoModal extends MediaModal {
       this.$thumbVideo.currentTime = 0;
       this.poster && this.$thumbVideo.load();
     }, { signal: this.controller.signal });
+
+    let rafId
+
+    function tick() {
+      const p = this.$modalVideo.currentTime / this.$modalVideo.duration
+      this.$container.style.setProperty('--progress', `${p}`)
+      rafId = requestAnimationFrame(tick.bind(this))
+    }
+
+    this.$modalVideo.addEventListener('play', () => {
+      rafId = requestAnimationFrame(tick.bind(this))
+    })
+
+    this.$modalVideo.addEventListener('pause', () => {
+      cancelAnimationFrame(rafId)
+    })
+
+    this.$modalVideo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (this.$modalVideo.paused) {
+        this.$modalVideo.play();
+      } else {
+        this.$modalVideo.pause();
+      }
+    })
 
     document.addEventListener("visibilitychange", () => {
       console.log('VISIBILITY CHANGE EVENT', document.visibilityState);
