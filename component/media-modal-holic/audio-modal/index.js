@@ -23,6 +23,7 @@ const svg = `
 export default class AudioModal extends MediaModal {
   constructor() {
     super()
+    this.rafId = null
   }
 
   async connectedCallback() {
@@ -61,9 +62,9 @@ export default class AudioModal extends MediaModal {
       )
       .onfinish = () => {
         this.$modalAudio.currentTime = 0;
-        // this.$modalAudio.play();
+        this.$modalAudio.play();
         requestAnimationFrame(() => {
-          this.$vinyl.style.animationPlayState = 'running';
+          this.$coverWrapper.style.animationPlayState = 'running';
         })
       }
 
@@ -85,7 +86,11 @@ export default class AudioModal extends MediaModal {
 
     audioAnim.onfinish = () => this.$modalAudio.pause();
 
-    modalAnim.onfinish = () => super.close?.();
+    modalAnim.onfinish = () => {
+      super.close?.()
+      this.rafId && cancelAnimationFrame(this.rafId);
+      this.$progressbar.style.setProperty('--a', '0deg');
+    };
   }
 
   async _preRender() {
@@ -115,8 +120,9 @@ export default class AudioModal extends MediaModal {
   _cacheElements() {
     this.$thumbAudio = this.$thumb.querySelector('audio');
     this.$modalAudio = this.$modal.querySelector('audio');
-    this.$vinyl = this.$modal.querySelector('.image-container');
     this.$coverImage = this.$modal.querySelector('.image-container img');
+    this.$coverWrapper = this.$modal.querySelector('.image-container .wrapper');
+    this.$progressbar = this.$modal.querySelector('.ring');
   }
 
   _bindEvents() {
@@ -125,12 +131,28 @@ export default class AudioModal extends MediaModal {
       e.stopPropagation();
       if (this.$modalAudio.paused) {
         this.$modalAudio.play();
-        this.$vinyl.style.animationPlayState = 'running';
+        this.$coverWrapper.style.animationPlayState = 'running';
       } else {
         this.$modalAudio.pause();
-        this.$vinyl.style.animationPlayState = 'paused';
+        this.$coverWrapper.style.animationPlayState = 'paused';
       }
     });
+
+    function tick() {
+      console.log('tick')
+      const p = this.$modalAudio.currentTime / this.$modalAudio.duration
+      this.$progressbar.style.setProperty('--a', `${p * 360}deg`)
+      this.rafId = requestAnimationFrame(tick.bind(this))
+    }
+
+    this.$modalAudio.addEventListener('play', () => {
+      this.rafId = requestAnimationFrame(tick.bind(this))
+    })
+
+    this.$modalAudio.addEventListener('pause', () => {
+      cancelAnimationFrame(this.rafId)
+      this.$coverWrapper.style.animationPlayState = 'paused';
+    })
   }
 
   _afterInit() {

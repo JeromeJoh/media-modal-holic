@@ -20,8 +20,6 @@
   position: relative;
   width: min(50vw, 50vh);
   aspect-ratio: 1 / 1;
-  animation: spin 5s linear infinite;
-  animation-play-state: paused;
   border-radius: 50%;
   box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.5);
   transition: box-shadow 200ms ease;
@@ -70,4 +68,28 @@ svg {
   transform: translate(-50%, -50%);
   pointer-events: none;
   filter: brightness(1.8);
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  --a: 0deg;
+  --thickness: 12px;
+  border-radius: 50%;
+
+  background: conic-gradient(lime var(--a), rgba(255, 255, 255, 0.15) 0);
+
+  mask: radial-gradient(
+    circle,
+    transparent calc(75% - var(--thickness)),
+    #000 calc(50% - var(--thickness) + 1px)
+  );
+  border: solid 1px red;
+  pointer-events: none;
+}
+
+.wrapper {
+  animation: spin 5s linear infinite;
+  animation-play-state: paused;
 }
