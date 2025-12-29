@@ -4,6 +4,7 @@ import { loadExternalResource, applyTemplate } from '../utils/index.js';
 export default class VideoModal extends MediaModal {
   constructor() {
     super();
+    this.rafId = null;
   }
 
   async connectedCallback() {
@@ -64,7 +65,7 @@ export default class VideoModal extends MediaModal {
 
     const first = this.$container.animate(
       [
-        { clipPath: 'inset(0% 100% 98% 0%)' },
+        { clipPath: 'inset(0% 0% 98% 100%)' },
         { clipPath: 'inset(0% 0% 98% 0%)' }
       ],
       {
@@ -89,7 +90,6 @@ export default class VideoModal extends MediaModal {
   }
 
   close(e) {
-    console.log('CLOSE MODAL AT VIDEO CLOSE', e.target);
     // if (e.target.tagName === 'VIDEO') return;
     const videoAnim = this.$modalVideo.animate(
       [
@@ -107,8 +107,11 @@ export default class VideoModal extends MediaModal {
     videoAnim.onfinish = () => this.$modalVideo.pause();
 
     modalAnim.onfinish = () => {
+      console.log('VIDEO MODAL CLOSED');
+      this.rafId && cancelAnimationFrame(this.rafId);
+      this.$container.style.setProperty('--progress', '100%');
+      console.log('CLOSE MODAL AT VIDEO CLOSE', this.$container);
       super.close?.();
-      this.$container.style.setProperty('--progress', '1')
     };
   }
 
@@ -177,20 +180,18 @@ export default class VideoModal extends MediaModal {
       this.poster && this.$thumbVideo.load();
     }, { signal: this.controller.signal });
 
-    let rafId
-
     function tick() {
       const p = this.$modalVideo.currentTime / this.$modalVideo.duration
       this.$container.style.setProperty('--progress', `${p}`)
-      rafId = requestAnimationFrame(tick.bind(this))
+      this.rafId = requestAnimationFrame(tick.bind(this))
     }
 
     this.$modalVideo.addEventListener('play', () => {
-      rafId = requestAnimationFrame(tick.bind(this))
+      this.rafId = requestAnimationFrame(tick.bind(this))
     })
 
     this.$modalVideo.addEventListener('pause', () => {
-      cancelAnimationFrame(rafId)
+      cancelAnimationFrame(this.rafId)
     })
 
     this.$modalVideo.addEventListener('click', (e) => {
