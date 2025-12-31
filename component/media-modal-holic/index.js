@@ -16,3 +16,8 @@ export async function defineAll(prefix = '') {
 export function autoRegister(prefix = '') {
   return defineAll(prefix);
 }
+
+// TODO: 优化 modal open 动画展示效果、资源的默认展示尺寸
+// TODO: 统一 modal 关闭动画效果
+// TODO: 整理 css 属性顺序与变量命名
+// TODO: 简化内联 svg 代码
