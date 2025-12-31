@@ -10,4 +10,3 @@ customElements.define('audio-modal-holic', AudioModal);
 
 // TODO: new register function to auto define custom elements
 // TODO: image modal add figure caption
-// TODO: video & audio play progress bar control

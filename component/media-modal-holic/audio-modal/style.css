@@ -70,23 +70,32 @@ svg {
   filter: brightness(1.8);
 }
 
-.ring {
+.ring-svg {
   position: absolute;
   inset: 0;
   z-index: 100;
-  --a: 0deg;
-  --thickness: 12px;
-  border-radius: 50%;
-
-  background: conic-gradient(lime var(--a), rgba(255, 255, 255, 0.15) 0);
-
-  mask: radial-gradient(
-    circle,
-    transparent calc(75% - var(--thickness)),
-    #000 calc(50% - var(--thickness) + 1px)
-  );
-  border: solid 1px red;
+  width: 130%;
+  height: 130%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   pointer-events: none;
+  overflow: visible;
+}
+
+.ring-svg circle {
+  transform-origin: 50% 50%;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  stroke: rgba(255, 255, 255, 0.12);
+}
+
+.ring-progress {
+  stroke: lime;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 120ms linear;
 }
 
 .wrapper {

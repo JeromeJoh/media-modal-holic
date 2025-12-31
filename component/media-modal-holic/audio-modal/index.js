@@ -63,9 +63,6 @@ export default class AudioModal extends MediaModal {
       .onfinish = () => {
         this.$modalAudio.currentTime = 0;
         this.$modalAudio.play();
-        requestAnimationFrame(() => {
-          this.$coverWrapper.style.animationPlayState = 'running';
-        })
       }
 
   }
@@ -89,7 +86,9 @@ export default class AudioModal extends MediaModal {
     modalAnim.onfinish = () => {
       super.close?.()
       this.rafId && cancelAnimationFrame(this.rafId);
-      this.$progressbar.style.setProperty('--a', '0deg');
+      if (this.$progressbar && this._ringCirc) {
+        this.$progressbar.style.strokeDashoffset = String(this._ringCirc);
+      }
     };
   }
 
@@ -122,7 +121,14 @@ export default class AudioModal extends MediaModal {
     this.$modalAudio = this.$modal.querySelector('audio');
     this.$coverImage = this.$modal.querySelector('.image-container img');
     this.$coverWrapper = this.$modal.querySelector('.image-container .wrapper');
-    this.$progressbar = this.$modal.querySelector('.ring');
+    this.$progressbar = this.$modal.querySelector('.ring-progress');
+
+    if (this.$progressbar) {
+      const r = parseFloat(this.$progressbar.getAttribute('r')) || 45;
+      this._ringCirc = 2 * Math.PI * r;
+      this.$progressbar.style.strokeDasharray = String(this._ringCirc);
+      this.$progressbar.style.strokeDashoffset = String(this._ringCirc);
+    }
   }
 
   _bindEvents() {
@@ -131,28 +137,39 @@ export default class AudioModal extends MediaModal {
       e.stopPropagation();
       if (this.$modalAudio.paused) {
         this.$modalAudio.play();
-        this.$coverWrapper.style.animationPlayState = 'running';
       } else {
         this.$modalAudio.pause();
-        this.$coverWrapper.style.animationPlayState = 'paused';
       }
     });
 
-    function tick() {
-      console.log('tick')
-      const p = this.$modalAudio.currentTime / this.$modalAudio.duration
-      this.$progressbar.style.setProperty('--a', `${p * 360}deg`)
-      this.rafId = requestAnimationFrame(tick.bind(this))
+    const tick = () => {
+      const duration = this.$modalAudio.duration || 1;
+      const p = (this.$modalAudio.currentTime / duration) || 0;
+      if (this.$progressbar && this._ringCirc) {
+        const offset = this._ringCirc * (1 - p);
+        this.$progressbar.style.strokeDashoffset = String(offset);
+      }
+      this.rafId = requestAnimationFrame(tick);
     }
 
     this.$modalAudio.addEventListener('play', () => {
-      this.rafId = requestAnimationFrame(tick.bind(this))
+      this.$coverWrapper.style.animationPlayState = 'running';
+      this.rafId = requestAnimationFrame(tick);
     })
 
     this.$modalAudio.addEventListener('pause', () => {
       cancelAnimationFrame(this.rafId)
       this.$coverWrapper.style.animationPlayState = 'paused';
     })
+
+    document.addEventListener("visibilitychange", () => {
+      if (!this.$modal.classList.contains('active')) return;
+      if (document.visibilityState === "visible") {
+        this.$modalAudio.play().catch(() => { });
+      } else {
+        this.$modalAudio.pause();
+      }
+    }, { signal: this.controller.signal });
   }
 
   _afterInit() {
