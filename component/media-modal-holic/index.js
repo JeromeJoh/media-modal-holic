@@ -21,3 +21,4 @@ export function autoRegister(prefix = '') {
 // TODO: 统一 modal 关闭动画效果
 // TODO: 整理 css 属性顺序与变量命名
 // TODO: 简化内联 svg 代码
+// TODO: 不同资源类型在 hover 时的交互效果优化

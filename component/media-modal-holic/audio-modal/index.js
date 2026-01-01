@@ -165,7 +165,7 @@ export default class AudioModal extends MediaModal {
     document.addEventListener("visibilitychange", () => {
       if (!this.$modal.classList.contains('active')) return;
       if (document.visibilityState === "visible") {
-        this.$modalAudio.play().catch(() => { });
+        this.$modalAudio.play();
       } else {
         this.$modalAudio.pause();
       }

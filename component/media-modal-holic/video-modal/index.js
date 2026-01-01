@@ -204,7 +204,6 @@ export default class VideoModal extends MediaModal {
     })
 
     document.addEventListener("visibilitychange", () => {
-      console.log('VISIBILITY CHANGE EVENT', document.visibilityState);
       if (!this.$modal.classList.contains('active')) return;
       if (document.visibilityState === "visible") {
         this.$modalVideo.play().catch(() => { });
