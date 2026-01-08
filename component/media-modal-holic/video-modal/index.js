@@ -15,42 +15,8 @@ export default class VideoModal extends MediaModal {
     super.disconnectedCallback?.();
   }
 
-  async open(e) {
+  async open() {
     super.open?.();
-    console.log('OPEN MODAL AT VIDEO OPEN', e.target.tagName);
-    const modalAnim = this.$modalVideo.animate(
-      [
-        { opacity: 0, transform: "scale(0)" },
-        { opacity: 1, transform: "scale(1)" }
-      ],
-      {
-        duration: 300,
-        easing: "cubic-bezier(0.22, 1, 0.36, 1)"
-      }
-    );
-
-    modalAnim.onfinish = () => {
-      this.$modalVideo.currentTime = 0;
-      this.$modalVideo.play();
-      // const v = this.$modal.querySelector('.overlay');
-      // v && v.classList.add('active');
-
-      // v.addEventListener('animationend', () => {
-      //   v.animate([
-      //     {
-      //       opacity: 1, 9
-      //     },
-      //     {
-      //       opacity: 0,
-      //     }
-      //   ],
-      //     {
-      //       duration: 300,
-      //       easing: "cubic-bezier(0.22, 1, 0.36, 1)"
-      //     })
-      //   setTimeout(() => v.classList.remove('active'), 400);
-      // })
-    }
 
     this.$modal.animate(
       [
@@ -75,7 +41,12 @@ export default class VideoModal extends MediaModal {
     );
 
     await first.finished;
-    const second = this.$container.animate(
+
+    this.$modalVideo.currentTime = 0;
+    this.$modalVideo.play();
+    this.$container.style.setProperty('--progress', '0%')
+
+    this.$container.animate(
       [
         { clipPath: 'inset(0% 0% 98% 0%)' },
         { clipPath: 'inset(0% 0% 0% 0%)' }
@@ -85,12 +56,9 @@ export default class VideoModal extends MediaModal {
         easing: "ease-out"
       }
     );
-    await second.finished;
-    this.$container.style.setProperty('--progress', '0%')
   }
 
-  close(e) {
-    // if (e.target.tagName === 'VIDEO') return;
+  close() {
     const videoAnim = this.$modalVideo.animate(
       [
         { opacity: 1, transform: "scale(1)" },
@@ -138,7 +106,19 @@ export default class VideoModal extends MediaModal {
   async _render() {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    this.$thumb.innerHTML = `<video src="${this.src}" muted ${this.poster ? `poster="${this.poster}"` : ''}></video>`;
+    this.$thumb.innerHTML = /*html*/ `
+    <video src="${this.src}" muted ${this.poster ? `poster="${this.poster}"` : ''}></video>
+    <div class="media-marker">
+      <div class="v-container">
+        <div class="stroke left">
+          <p></p>
+        </div>
+        <div class="stroke right">
+          <p></p>
+        </div>
+      </div>
+    </div>
+    `;
 
     this.$modal.innerHTML = applyTemplate(html, {
       src: this.src,
