@@ -60,7 +60,6 @@ class BaseComponent extends HTMLElement {
   }
 }
 
-
 export default class MediaModal extends BaseComponent {
   static get observedAttributes() { return ['src']; }
   controller = new AbortController();
@@ -110,7 +109,6 @@ export default class MediaModal extends BaseComponent {
   _bindEvents() {
     this.addEventListener('keydown', (e) => {
       if (e.key === ' ' || e.key === 'Enter') {
-        console.log('BASE MODAL open()', this, document.activeElement);
         e.preventDefault();
         if (this.$modal.classList.contains('active')) return;
 
@@ -134,14 +132,13 @@ export default class MediaModal extends BaseComponent {
 
   _cleanup() {
     this.controller.abort();
-    console.log('BASE MODAL _cleanup');
   }
 
   open() {
-    this.$modal.classList.add('active');
+    this.setAttribute('active', '')
   }
 
   close() {
-    this.$modal.classList.remove('active');
+    this.removeAttribute('active')
   }
 }
