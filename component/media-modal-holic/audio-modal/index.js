@@ -101,7 +101,19 @@ export default class AudioModal extends MediaModal {
   async _render() {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    this.$thumb.innerHTML = `<img src="${this.cover}" alt="Audio cover"></img>`;
+    this.$thumb.innerHTML = `
+    <img src="${this.cover}" alt="Audio cover"></img>
+    <div class="media-marker">
+      <div class="a-container">
+        <div class="stroke left">
+          <p></p>
+        </div>
+        <div class="stroke right">
+          <p></p>
+        </div>
+      </div>
+    </div>
+    `;
     this.$modal.innerHTML = applyTemplate(html, {
       src: this.src,
       cover: this.cover
