@@ -82,6 +82,15 @@ export default class MediaModal extends BaseComponent {
     if (oldValue !== newValue) return;
   }
 
+  _applyStyleSheet(css) {
+    const baseSheet = new CSSStyleSheet();
+    baseSheet.replaceSync(css);
+    this.shadowRoot.adoptedStyleSheets = [
+      ...this.shadowRoot.adoptedStyleSheets,
+      baseSheet
+    ];
+  }
+
   async _preRender() {
     this.src = this.getAttribute('src');
     this.setAttribute('tabindex', '0');
@@ -90,9 +99,7 @@ export default class MediaModal extends BaseComponent {
   async _render() {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
     this.shadowRoot.innerHTML = html;
-    const baseSheet = new CSSStyleSheet();
-    baseSheet.replaceSync(css);
-    this.shadowRoot.adoptedStyleSheets = [baseSheet];
+    this._applyStyleSheet(css);
   }
 
   _cacheElements() {

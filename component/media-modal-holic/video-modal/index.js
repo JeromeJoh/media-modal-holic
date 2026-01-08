@@ -146,13 +146,7 @@ export default class VideoModal extends MediaModal {
       controls: this.showControls
     })
 
-    const baseSheet = new CSSStyleSheet();
-    baseSheet.replaceSync(css);
-
-    this.shadowRoot.adoptedStyleSheets = [
-      ...this.shadowRoot.adoptedStyleSheets,
-      baseSheet
-    ];
+    this._applyStyleSheet(css);
   }
 
   _cacheElements() {

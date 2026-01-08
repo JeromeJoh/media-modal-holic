@@ -83,13 +83,7 @@ export default class ImageModal extends MediaModal {
       imageCaption: this.imageCaption
     });
 
-    const baseSheet = new CSSStyleSheet();
-    baseSheet.replaceSync(css);
-
-    this.shadowRoot.adoptedStyleSheets = [
-      ...this.shadowRoot.adoptedStyleSheets,
-      baseSheet
-    ];
+    this._applyStyleSheet(css);
   }
 
   _cacheElements() {

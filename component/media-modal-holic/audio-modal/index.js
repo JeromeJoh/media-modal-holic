@@ -107,13 +107,7 @@ export default class AudioModal extends MediaModal {
       cover: this.cover
     });
 
-    const baseSheet = new CSSStyleSheet();
-    baseSheet.replaceSync(css);
-
-    this.shadowRoot.adoptedStyleSheets = [
-      ...this.shadowRoot.adoptedStyleSheets,
-      baseSheet
-    ];
+    this._applyStyleSheet(css);
   }
 
   _cacheElements() {
