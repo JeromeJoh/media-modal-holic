@@ -18,17 +18,6 @@ export default class VideoModal extends MediaModal {
   async open() {
     super.open?.();
 
-    this.$modal.animate(
-      [
-        { opacity: 0 },
-        { opacity: 1 }
-      ],
-      {
-        duration: 250,
-        easing: "ease-out"
-      }
-    );
-
     const first = this.$container.animate(
       [
         { clipPath: 'inset(0% 0% calc(100% - 4px) 100%)' },

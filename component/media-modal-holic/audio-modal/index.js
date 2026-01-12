@@ -37,17 +37,6 @@ export default class AudioModal extends MediaModal {
   async open() {
     super.open?.();
 
-    this.$modal.animate(
-      [
-        { opacity: 0 },
-        { opacity: 1 }
-      ],
-      {
-        duration: 250,
-        easing: "ease-out"
-      }
-    )
-
     this.$coverImage
       .animate(
         [

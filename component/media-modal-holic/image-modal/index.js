@@ -12,6 +12,7 @@ export default class ImageModal extends MediaModal {
 
   open() {
     super.open?.();
+
     this.$modalImage.animate(
       [
         { opacity: 0, transform: "scale(0) translateY(0px)", filter: "blur(20px)" },
@@ -22,17 +23,6 @@ export default class ImageModal extends MediaModal {
       {
         duration: 700,
         easing: "cubic-bezier(0.22, 1, 0.36, 1)"
-      }
-    );
-
-    const modalAnim = this.$modal.animate(
-      [
-        { opacity: 0 },
-        { opacity: 1 }
-      ],
-      {
-        duration: 250,
-        easing: "ease-out"
       }
     );
 

@@ -136,6 +136,16 @@ export default class MediaModal extends BaseComponent {
 
   open() {
     this.setAttribute('active', '')
+    this.$modal.animate(
+      [
+        { opacity: 0 },
+        { opacity: 1 }
+      ],
+      {
+        duration: 250,
+        easing: "ease-out"
+      }
+    )
   }
 
   close() {
