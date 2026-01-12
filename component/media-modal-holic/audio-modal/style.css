@@ -182,29 +182,29 @@ svg {
 }
 
 .thumbnail:hover > img:nth-of-type(1) {
-  clip-path: inset(40% 90% 40% 0);
+  clip-path: inset(45% 90% 45% 0);
 }
 
 .thumbnail:hover > img:nth-of-type(2) {
-  clip-path: inset(30% 75% 30% 15%);
+  clip-path: inset(35% 75% 35% 15%);
 }
 
 .thumbnail:hover > img:nth-of-type(3) {
-  clip-path: inset(20% 60% 20% 30%);
+  clip-path: inset(30% 60% 30% 30%);
 }
 
 .thumbnail:hover > img:nth-of-type(4) {
-  clip-path: inset(10% 45% 10% 45%);
+  clip-path: inset(20% 45% 20% 45%);
 }
 
 .thumbnail:hover > img:nth-of-type(5) {
-  clip-path: inset(20% 30% 20% 60%);
+  clip-path: inset(30% 30% 30% 60%);
 }
 
 .thumbnail:hover > img:nth-of-type(6) {
-  clip-path: inset(30% 15% 30% 75%);
+  clip-path: inset(35% 15% 35% 75%);
 }
 
 .thumbnail:hover > img:nth-of-type(7) {
-  clip-path: inset(40% 0 40% 90%);
+  clip-path: inset(45% 0 45% 90%);
 }
