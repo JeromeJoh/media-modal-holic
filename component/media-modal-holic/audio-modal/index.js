@@ -51,11 +51,11 @@ export default class AudioModal extends MediaModal {
     this.$coverImage
       .animate(
         [
-          { opacity: 0, transform: "scale(0) rotate(-15deg)" },
-          { opacity: 1, transform: "scale(1) rotate(0deg)" }
+          { transform: "rotate(-30deg)", filter: "blur(10px)" },
+          { transform: "rotate(0deg)", filter: "blur(0px)" }
         ],
         {
-          duration: 750,
+          duration: 350,
           easing: "cubic-bezier(1, 0, 0, 1)",
           fill: 'forwards'
         }
