@@ -44,7 +44,6 @@ export default class ImageModal extends MediaModal {
     );
 
     modalAnim.onfinish = () => super.close?.();
-
   }
 
   disconnectedCallback() {

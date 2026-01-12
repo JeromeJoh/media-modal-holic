@@ -65,19 +65,19 @@ export default class AudioModal extends MediaModal {
       { duration: 200, easing: "ease-in" }
     );
 
+    audioAnim.onfinish = () => this.$modalAudio.pause();
+
     const modalAnim = this.$modal.animate(
       [{ opacity: 1 }, { opacity: 0 }],
       { duration: 200, easing: "ease-in" }
     );
 
-    audioAnim.onfinish = () => this.$modalAudio.pause();
-
     modalAnim.onfinish = () => {
-      super.close?.()
       this.rafId && cancelAnimationFrame(this.rafId);
       if (this.$progressbar && this._ringCirc) {
         this.$progressbar.style.strokeDashoffset = String(this._ringCirc);
       }
+      super.close?.()
     };
   }
 

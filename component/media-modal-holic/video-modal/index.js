@@ -56,18 +56,16 @@ export default class VideoModal extends MediaModal {
       { duration: 200, easing: "ease-in" }
     );
 
+    videoAnim.onfinish = () => this.$modalVideo.pause();
+
     const modalAnim = this.$modal.animate(
       [{ opacity: 1 }, { opacity: 0 }],
       { duration: 200, easing: "ease-in" }
     );
 
-    videoAnim.onfinish = () => this.$modalVideo.pause();
-
     modalAnim.onfinish = () => {
-      console.log('VIDEO MODAL CLOSED');
       this.rafId && cancelAnimationFrame(this.rafId);
       this.$container.style.setProperty('--progress', '100%');
-      console.log('CLOSE MODAL AT VIDEO CLOSE', this.$container);
       super.close?.();
     };
   }
