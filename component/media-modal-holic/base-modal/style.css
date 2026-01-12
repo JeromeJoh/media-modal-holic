@@ -3,7 +3,7 @@
   position: relative;
   cursor: pointer;
   --box-size: 200px;
-  --theme-color: lime;
+  --theme-color: chartreuse;
 }
 
 *,

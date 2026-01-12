@@ -31,8 +31,8 @@ export default class VideoModal extends MediaModal {
 
     const first = this.$container.animate(
       [
-        { clipPath: 'inset(0% 0% 98% 100%)' },
-        { clipPath: 'inset(0% 0% 98% 0%)' }
+        { clipPath: 'inset(0% 0% calc(100% - 4px) 100%)' },
+        { clipPath: 'inset(0% 0% calc(100% - 4px) 0%)' }
       ],
       {
         duration: 300,
@@ -48,7 +48,7 @@ export default class VideoModal extends MediaModal {
 
     this.$container.animate(
       [
-        { clipPath: 'inset(0% 0% 98% 0%)' },
+        { clipPath: 'inset(0% 0% calc(100% - 4px) 0%)' },
         { clipPath: 'inset(0% 0% 0% 0%)' }
       ],
       {
