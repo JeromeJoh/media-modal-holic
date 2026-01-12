@@ -5,16 +5,14 @@ export async function defineLazy(type, tagName) {
   customElements.define(tag, module.default);
 }
 
-export async function defineAll(prefix = '') {
-  await Promise.all([
-    defineLazy('audio', `${prefix}audio-modal-holic`),
-    defineLazy('image', `${prefix}image-modal-holic`),
-    defineLazy('video', `${prefix}video-modal-holic`)
-  ]);
+export async function autoRegister(typeArray = ['image'], prefix = '') {
+  await Promise.all(
+    typeArray.map(type =>
+      defineLazy(type, `${prefix}${type}-modal-holic`)
+    )
+  );
 }
 
-export function autoRegister(prefix = '') {
-  return defineAll(prefix);
+export function defineAll(prefix = '') {
+  return autoRegister(['image', 'audio', 'video'], prefix);
 }
-
-// TODO: 优化 modal open 动画展示效果、资源的默认展示尺寸
