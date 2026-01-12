@@ -77,7 +77,9 @@ export default class ImageModal extends MediaModal {
   async _render() {
     const [html, css] = await Promise.all([loadExternalResource('./template.html', import.meta.url), loadExternalResource('./style.css', import.meta.url)]);
 
-    this.$thumb.innerHTML = `<img src="${this.src}" alt="${this.imageCaption}" title="${this.imageCaption}"></img>`
+    this.$thumb.innerHTML = `
+    <img src="${this.src}" alt="${this.imageCaption}" title="${this.imageCaption}"></img>
+    `
     this.$modal.innerHTML = applyTemplate(html, {
       src: this.src,
       imageCaption: this.imageCaption

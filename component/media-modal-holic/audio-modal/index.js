@@ -103,16 +103,12 @@ export default class AudioModal extends MediaModal {
 
     this.$thumb.innerHTML = `
     <img src="${this.cover}" alt="Audio cover"></img>
-    <div class="media-marker">
-      <div class="a-container">
-        <div class="stroke left">
-          <p></p>
-        </div>
-        <div class="stroke right">
-          <p></p>
-        </div>
-      </div>
-    </div>
+    <img src="${this.cover}" alt="Audio cover"></img>
+    <img src="${this.cover}" alt="Audio cover"></img>
+    <img src="${this.cover}" alt="Audio cover"></img>
+    <img src="${this.cover}" alt="Audio cover"></img>
+    <img src="${this.cover}" alt="Audio cover"></img>
+    <img src="${this.cover}" alt="Audio cover"></img>
     `;
     this.$modal.innerHTML = applyTemplate(html, {
       src: this.src,

@@ -108,16 +108,6 @@ export default class VideoModal extends MediaModal {
 
     this.$thumb.innerHTML = /*html*/ `
     <video src="${this.src}" muted ${this.poster ? `poster="${this.poster}"` : ''}></video>
-    <div class="media-marker">
-      <div class="v-container">
-        <div class="stroke left">
-          <p></p>
-        </div>
-        <div class="stroke right">
-          <p></p>
-        </div>
-      </div>
-    </div>
     `;
 
     this.$modal.innerHTML = applyTemplate(html, {
