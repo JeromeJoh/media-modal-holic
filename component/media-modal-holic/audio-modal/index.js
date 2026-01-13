@@ -154,11 +154,11 @@ export default class AudioModal extends MediaModal {
     })
 
     document.addEventListener("visibilitychange", () => {
-      if (!this.$modal.classList.contains('active')) return;
-      if (document.visibilityState === "visible") {
-        this.$modalAudio.play();
-      } else {
+      if (!this.hasAttribute('active')) return;
+      if (document.hidden) {
         this.$modalAudio.pause();
+      } else {
+        this.$modalAudio.play();
       }
     }, { signal: this.controller.signal });
   }

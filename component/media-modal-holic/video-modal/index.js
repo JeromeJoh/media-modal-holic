@@ -155,11 +155,11 @@ export default class VideoModal extends MediaModal {
     })
 
     document.addEventListener("visibilitychange", () => {
-      if (!this.$modal.classList.contains('active')) return;
-      if (document.visibilityState === "visible") {
-        this.$modalVideo.play().catch(() => { });
-      } else {
+      if (!this.hasAttribute('active')) return;
+      if (document.hidden) {
         this.$modalVideo.pause();
+      } else {
+        this.$modalVideo.play();
       }
     }, { signal: this.controller.signal });
   }
