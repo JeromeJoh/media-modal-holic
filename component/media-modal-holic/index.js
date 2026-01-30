@@ -18,3 +18,4 @@ export function defineAll(prefix = '') {
 }
 
 // TODO: modal 展开时通过鼠标滚轮控制播放进度
+// TODO: readme 文档补充说明
