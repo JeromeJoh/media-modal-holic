@@ -153,6 +153,17 @@ export default class VideoModal extends MediaModal {
         this.$modalVideo.pause();
       }
     })
+    let lastTime = 0;
+    const SENSITIVITY = 0.1
+    this.$modal.addEventListener('wheel', (e) => {
+      e.preventDefault()
+
+      const now = performance.now()
+      if (now - lastTime < 50) return
+      lastTime = now
+
+      this.$modalVideo.currentTime += Math.sign(e.deltaY) * SENSITIVITY * this.$modalVideo.duration;
+    }, { passive: false, signal: this.controller.signal })
 
     document.addEventListener("visibilitychange", () => {
       if (!this.hasAttribute('active')) return;

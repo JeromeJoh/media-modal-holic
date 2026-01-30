@@ -161,6 +161,19 @@ export default class AudioModal extends MediaModal {
         this.$modalAudio.play();
       }
     }, { signal: this.controller.signal });
+
+
+    let lastTime = 0
+    const SENSITIVITY = 0.005
+    this.$modal.addEventListener('wheel', (e) => {
+      e.preventDefault()
+
+      const now = performance.now()
+      if (now - lastTime < 50) return
+      lastTime = now
+
+      this.$modalAudio.currentTime += Math.sign(e.deltaY) * SENSITIVITY * this.$modalAudio.duration;
+    }, { passive: false, signal: this.controller.signal })
   }
 
   _afterInit() {
