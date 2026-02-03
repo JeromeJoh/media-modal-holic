@@ -6,6 +6,18 @@
   --theme-color: chartreuse;
 }
 
+:host(:focus-within) {
+  outline: 2px solid var(--theme-color);
+  outline-offset: 2px;
+  /* box-shadow: 0 0 0 3px var(--theme-color); */
+  box-shadow: 0 0 0 1px var(--theme-color);
+}
+
+:host([disabled]) {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 *,
 *::before,
 *::after {
